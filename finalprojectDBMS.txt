@@ -1,0 +1,65 @@
+create table Student (stuID number PRIMARY KEY, fname varchar(10) NOT NULL, lname varchar(10) NOT NULL, email varchar(25), cYear varchar(10), age number NOT NULL  CHECK (age >= 17));
+create table Dept (dname varchar(10) PRIMARY KEY, building varchar(20));
+create table Prof (profID number PRIMARY KEY, room number, dname varchar(10) NOT NULL);
+create table Course(cID number PRIMARY KEY, dname varchar(10), profID number, room number, FOREIGN KEY (dname) REFERENCES Dept(dname), FOREIGN KEY (profID) REFERENCES Prof(profID));
+create table Enrollment(cID number PRIMARY KEY, stuID number, FOREIGN KEY (cID) REFERENCES Course (cID), FOREIGN KEY (stuID) REFERENCES Student (stuID));
+create table CourseLab(lcID number PRIMARY KEY, superCID number, room number, profID number, FOREIGN KEY (superCID) REFERENCES Course (cID), FOREIGN KEY (profID) REFERENCES Prof (profID));
+create or replace trigger only_5_departments
+    BEFORE UPDATE OR INSERT ON Dept
+    for each row
+    DECLARE
+    dept_count  INTEGER;
+    max_depts  INTEGER := 5;
+    Begin
+    SELECT COUNT(*) INTO dept_count
+    FROM Dept
+    WHERE dname = :NEW.dname;
+    IF :OLD.dname = :NEW.dname THEN
+    RETURN;
+    ELSE
+    IF dept_count >= max_depts THEN
+    RAISE_APPLICATION_ERROR (-20000, 'There are a max amount of depts, which is 5.');
+    END IF;
+    END IF;
+    END;
+    
+insert into Student values (123, 'Dawson', 'Bridger', 'da01brid@siena.edu', 'Senior', 21);
+insert into Student values (124, 'Jack', 'Morin', 'ja05mori@siena.edu', 'Junior', 20);
+insert into Student values (125, 'Susan', 'Crout', 'si10crou@siena.edu', 'Senior', 21);
+insert into Student values (126, 'Karen', 'Fisher', 'kw30fish@siena.edu', 'Senior', 21);
+insert into Student values (127, 'John', 'Doe', 'je15doe@siena.edu', 'Freshman', 17);
+insert into Student values (128, 'Derek', 'Bridge', 'dd05brid@siena.edu', 'Sophomore', 19);
+insert into Student values (129, 'Zach', 'Formen', 'zf06form@siena.edu', 'Freshman', 16);
+insert into Student values (130, 'Bianca', 'Salves', 'be18salv@siena.edu', 'Senior', 22);
+insert into Student values (131, 'Lauren', 'Bond', 'lr26bond@siena.edu', 'Junior', 21);
+insert into Student values (132, 'Jeffrey', 'Epstein', 'je19epst@siena.edu', 'Senior', 23);
+insert into Student values (133, 'Michael', 'Fasbanger', 'm24fasb@siena.edu', 'Freshman', 18);
+insert into Student values (134, 'Alex', 'Rodriguez', 'aw14rodr@siena.edu', 'Senior', 25);
+insert into Student values (135, 'Jaquan', 'Matthews', 'jt09matt@siena.edu', 'Freshman', 18);
+insert into Student values (136, 'Anthony', 'Batchelder', 'aa07batc@siena.edu', 'Senior', 21);
+insert into Student values (137, 'Ashleigh', 'Lacy', 'a19lacy@siena.edu', 'Sophomore', 19);
+insert into Student values (138, 'Ashley', 'Washington', 'ae19wash@siena.edu', 'Sophomore', 20);
+insert into Student values (139, 'Casey', 'Hamilton', 'ce22hami@siena.edu', 'Sophomore', 20);
+insert into Student values (140, 'Jennifer', 'Aniston', 'ja29anis@siena.edu', 'Senior', 30);
+insert into Student values (141, 'Ashton', 'Dawson', 'aw25daws@siena.edu', 'Freshman', 17);
+insert into Student values (142, 'Phil', 'Simms', 'pt14simm@siena.edu', 'Senior', 25);
+insert into Student values (143, 'Phil', 'Nicholson', 'pj02nich@siena.edu', 'Junior', 21);
+insert into Student values (144, 'Lebron', 'James', 'la23jame@siena.edu', 'Senior', 22);
+insert into Student values (145, 'Steph', 'Curry', 'sw30curr@siena.edu', 'Junior', 19);
+insert into Student values (146, 'James', 'Harden', 'j13hard@siena.edu', 'Junior', 21);
+insert into Student values (147, 'Kevin', 'Durant', 'ke25dura@siena.edu', 'Sophomore', 20);
+insert into Student values (148, 'Kryie', 'Irving', 'kj11irvi@siena.edu', 'Freshman', 21);
+insert into Student values (149, 'Daniel', 'Jones', 'dn19jone@siena.edu', 'Freshman', 18);
+insert into Student values (150, 'Julio', 'Jones', 'jj11jone@siena.edu', 'Senior', 22);
+insert into Student values (151, 'Jarvis', 'Landry', 'jk04land@siena.edu', 'Sophomore', 19);
+insert into Student values (152, 'Arnold', 'Palmer', 'aa12palm@siena.edu', 'Freshman', 17);
+insert into Student values (153, 'Joe', 'Biden', 'jt29bide@siena.edu', 'Junior', 21);
+
+
+drop table Student;
+drop table Dept;
+drop table Prof;
+drop table Course;
+drop table Enrollment;
+drop table CourseLab;
+drop trigger only_5_departments;
